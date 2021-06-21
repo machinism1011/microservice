@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/machinism1011/microservice/user/domain/model"
 )
 

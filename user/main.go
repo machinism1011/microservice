@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/machinism1011/microservice/user/domain/repository"
 	service2 "github.com/machinism1011/microservice/user/domain/service"
 	"github.com/machinism1011/microservice/user/handler"
@@ -18,7 +19,7 @@ func main() {
 	)
 	srv.Init()
 	db, err := gorm.Open("mysql",
-		"root:silverabc1024@tcp(localhost:3306)/micro?charset=utf88&parseTime=True&loc=Local&timeout=10s",
+		"root:silverabc1024@tcp(localhost:3306)/micro?charset=utf8&parseTime=True&loc=Local&timeout=10s",
 	)
 	if err != nil {
 		fmt.Println(err)
