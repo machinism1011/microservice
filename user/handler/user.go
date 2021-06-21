@@ -41,11 +41,11 @@ func (u *User) GetUserInfo(ctx context.Context, userInfoRequest *protoUser.UserI
 	if err != nil {
 		return err
 	}
-	userInfoResponse = UserForResponse(userInfo)
+	userInfoResponse = userForResponse(userInfo)
 	return nil
 }
 
-func UserForResponse(userModel *model.User) *protoUser.UserInfoResponse {
+func userForResponse(userModel *model.User) *protoUser.UserInfoResponse {
 	response := &protoUser.UserInfoResponse{}
 	response.UserName = userModel.UserName
 	response.FirstName = userModel.FirstName

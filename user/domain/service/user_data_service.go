@@ -24,11 +24,11 @@ func NewUserDataService(userRepository repository.IUserRepository) IUserDataServ
 	return &UserDataService{UserRepository:userRepository}
 }
 // 加密及验证用户密码
-func GeneratePassword(userPassword string) ([]byte, error) {
+func generatePassword(userPassword string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(userPassword), bcrypt.DefaultCost)
 }
 
-func ValidatePassword(userPassword string, hashed string) (isOk bool, err error) {
+func validatePassword(userPassword string, hashed string) (isOk bool, err error) {
 	if err = bcrypt.CompareHashAndPassword([]byte(hashed), []byte(userPassword)); err != nil {
 		return false, errors.New("密码比对错误")
 	}
@@ -37,7 +37,7 @@ func ValidatePassword(userPassword string, hashed string) (isOk bool, err error)
 
 // 插入用户
 func (u *UserDataService) AddUser(user *model.User) (userID int64, err error) {
-	pwdByte, err := GeneratePassword(user.HashPassword)
+	pwdByte, err := generatePassword(user.HashPassword)
 	if err != nil {
 		return user.ID, err
 	}
@@ -52,7 +52,7 @@ func (u *UserDataService) DeleteUser(userID int64) error {
 
 func (u *UserDataService) UpdateUser(user *model.User, isChangedPwd bool) (err error) {
 	if isChangedPwd {
-		pwdByte, err := GeneratePassword(user.HashPassword)
+		pwdByte, err := generatePassword(user.HashPassword)
 		if err != nil {
 			return err
 		}
@@ -70,6 +70,6 @@ func (u *UserDataService) CheckPwd(userName, pwd string) (isOk bool, err error) 
 	if err != nil {
 		return false, err
 	}
-	return ValidatePassword(pwd, user.HashPassword)
+	return validatePassword(pwd, user.HashPassword)
 }
 
