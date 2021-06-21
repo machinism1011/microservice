@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gihub.com/machinism1011/user/handler"
-	pb "github.com/machinism1011/user/proto"
+	"github.com/machinism1011/microservice/user/handler"
+	pb "github.com/machinism1011/microservice/user/proto"
 
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/logger"
