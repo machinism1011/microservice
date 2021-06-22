@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8297ddcd-6335-429d-a454-9adee5360906" name="默认的" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="/usr/local/Cellar/go/1.15.6/libexec" />
+  <component name="ProjectId" id="1u79DoIly5uuBajal0HmIjhyH5D" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/proto" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build server.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="code" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/server.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go 构建.go build server.go" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8297ddcd-6335-429d-a454-9adee5360906" name="默认的" comment="" />
+      <created>1624005643588</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1624005643588</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="842" y="318" key="#Go_模块" timestamp="1624005752658">
+      <screen x="0" y="23" width="1792" height="1025" />
+    </state>
+    <state x="842" y="318" key="#Go_模块/0.23.1792.1025@0.23.1792.1025" timestamp="1624005752658" />
+    <state width="673" height="253" key="GridCell.Tab.0.bottom" timestamp="1624019687942">
+      <screen x="0" y="23" width="1792" height="1025" />
+    </state>
+    <state width="673" height="253" key="GridCell.Tab.0.bottom/0.23.1792.1025@0.23.1792.1025" timestamp="1624019687942" />
+    <state width="673" height="253" key="GridCell.Tab.0.center" timestamp="1624019687941">
+      <screen x="0" y="23" width="1792" height="1025" />
+    </state>
+    <state width="673" height="253" key="GridCell.Tab.0.center/0.23.1792.1025@0.23.1792.1025" timestamp="1624019687941" />
+    <state width="673" height="253" key="GridCell.Tab.0.left" timestamp="1624019687941">
+      <screen x="0" y="23" width="1792" height="1025" />
+    </state>
+    <state width="673" height="253" key="GridCell.Tab.0.left/0.23.1792.1025@0.23.1792.1025" timestamp="1624019687941" />
+    <state width="673" height="253" key="GridCell.Tab.0.right" timestamp="1624019687941">
+      <screen x="0" y="23" width="1792" height="1025" />
+    </state>
+    <state width="673" height="253" key="GridCell.Tab.0.right/0.23.1792.1025@0.23.1792.1025" timestamp="1624019687941" />
+  </component>
+</project>
