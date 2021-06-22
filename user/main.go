@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"github.com/machinism1011/microservice/user/domain/repository"
 	service2 "github.com/machinism1011/microservice/user/domain/service"
 	"github.com/machinism1011/microservice/user/handler"
@@ -22,15 +22,14 @@ func main() {
 		"root:silverabc1024@tcp(localhost:3306)/micro?charset=utf8&parseTime=True&loc=Local&timeout=10s",
 	)
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 	defer db.Close()
 	db.SingularTable(true)
 
 	// 只执行一次，数据表初始化
-	rp := repository.NewUserRepository(db)
-	rp.InitTable()
+	//rp := repository.NewUserRepository(db)
+	//rp.InitTable()
 
 	// 创建服务实例
 	userDataService := service2.NewUserDataService(repository.NewUserRepository(db))
