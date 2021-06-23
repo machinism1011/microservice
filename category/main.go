@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/machinism1011/microservice/category/common"
 	"github.com/machinism1011/microservice/category/domain/repository"
 	cservice "github.com/machinism1011/microservice/category/domain/service"
@@ -51,6 +52,10 @@ func main() {
 	}
 	defer db.Close()
 	db.SingularTable(true)
+
+	// table初始化，只执行一次
+	rp := repository.NewCategoryRepository(db)
+	_ = rp.InitTable()
 
 	service.Init()
 
