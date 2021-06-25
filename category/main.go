@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"github.com/machinism1011/microservice/category/common"
 	"github.com/machinism1011/microservice/category/domain/repository"
 	cservice "github.com/machinism1011/microservice/category/domain/service"
