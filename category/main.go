@@ -28,15 +28,15 @@ func main() {
 		}
 	})
 
-	// Create service
+	// 创建服务
 	service := micro.NewService(
 		micro.Name("go.micro.service.category"),
 		micro.Version("latest"),
 		micro.Address("127.0.0.1:8082"),     // 设置地址及暴露的端口
-		micro.Registry(consulRegistry),
+		micro.Registry(consulRegistry),            // 添加consul作为注册中心
 		)
 
-	// 获取mysql配置，路径中不带前缀
+	// 通过配置中心获取mysql配置，路径中不带前缀
 	mysqlInfo := common.GetMySQLFromConsul(consulConfig, "mysql")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s",
 		mysqlInfo.User,
@@ -54,8 +54,8 @@ func main() {
 	db.SingularTable(true)
 
 	// table初始化，只执行一次
-	rp := repository.NewCategoryRepository(db)
-	_ = rp.InitTable()
+	//rp := repository.NewCategoryRepository(db)
+	//_ = rp.InitTable()
 
 	service.Init()
 
@@ -64,7 +64,7 @@ func main() {
 	if err != nil {
 		logger.Error(err)
 	}
-	// Run service
+	// 运行服务，注册到注册中心
 	if err := service.Run(); err != nil {
 		logger.Fatal(err)
 	}
