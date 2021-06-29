@@ -59,8 +59,8 @@ func main() {
 	db.SingularTable(true)
 
 	// 初始化数据库表，只执行一次
-	//rp := repository.NewProductRepository(db)
-	//_ = rp.InitTable()
+	rp := repository.NewProductRepository(db)
+	_ = rp.InitTable()
 
 	productDataService := pservice.NewProductDataService(repository.NewProductRepository(db))
 
@@ -75,7 +75,7 @@ func main() {
 
 	service.Init()
 
-    err = product.RegisterProductHandler(service.Server(), &handler.Product{ProductDataService: productDataService})
+	err = product.RegisterProductHandler(service.Server(), &handler.Product{ProductDataService: productDataService})
 	if err != nil {
 		logger.Error(err)
 	}
