@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+
 	"github.com/machinism1011/microservice/product/domain/model"
 	proto "github.com/machinism1011/microservice/product/proto"
 )

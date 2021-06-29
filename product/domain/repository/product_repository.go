@@ -20,7 +20,7 @@ type ProductRepository struct {
 }
 
 func NewProductRepository(db *gorm.DB) IProductRepository {
-	return &ProductRepository{mysqlDb:db}
+	return &ProductRepository{mysqlDb: db}
 }
 
 func (p *ProductRepository) InitTable() error {
@@ -31,7 +31,7 @@ func (p *ProductRepository) InitTable() error {
 func (p *ProductRepository) FindProductByID(productID int64) (product *model.Product, err error) {
 	product = &model.Product{}
 	// 加载关联信息，使用preload
-	return product, p.mysqlDb.Preload("ProductImage").Preload("ProductSize").Preload("ProductSeo"). First(product, productID).Error
+	return product, p.mysqlDb.Preload("ProductImage").Preload("ProductSize").Preload("ProductSeo").First(product, productID).Error
 }
 
 func (p *ProductRepository) FindAllProduct() (productSlice []model.Product, err error) {
@@ -78,4 +78,3 @@ func (p *ProductRepository) DeleteProductByID(productID int64) error {
 func (p *ProductRepository) UpdateProduct(product *model.Product) error {
 	return p.mysqlDb.Model(product).Update(product).Error
 }
-

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/machinism1011/microservice/product/common"
@@ -41,7 +42,6 @@ func main() {
 
 	// 数据库
 	mysqlInfo := common.GetMySQLFromConsul(consulConfig, "mysql")
-	fmt.Println("user:" + mysqlInfo.User)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local&timeout=%s",
 		mysqlInfo.User,
 		mysqlInfo.Pwd,
@@ -50,7 +50,7 @@ func main() {
 		mysqlInfo.DataBase,
 		"10s",
 	)
-	fmt.Println(dsn)
+	//fmt.Println(dsn)
 	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		logger.Error(err)
@@ -59,8 +59,8 @@ func main() {
 	db.SingularTable(true)
 
 	// 初始化数据库表，只执行一次
-	rp := repository.NewProductRepository(db)
-	_ = rp.InitTable()
+	//rp := repository.NewProductRepository(db)
+	//_ = rp.InitTable()
 
 	productDataService := pservice.NewProductDataService(repository.NewProductRepository(db))
 
