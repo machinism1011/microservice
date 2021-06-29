@@ -2,47 +2,69 @@ package handler
 
 import (
 	"context"
-
-	log "github.com/micro/micro/v3/service/logger"
-
-	product "product/proto"
+	"github.com/machinism1011/microservice/product/common"
+	"github.com/machinism1011/microservice/product/domain/model"
+	"github.com/machinism1011/microservice/product/domain/service"
+	protoProduct "github.com/machinism1011/microservice/product/proto"
 )
 
-type Product struct{}
+type Product struct{
+	ProductDataService service.IProductDataService
+}
 
-// Call is a single request handler called via client.Call or the generated client code
-func (e *Product) Call(ctx context.Context, req *product.Request, rsp *product.Response) error {
-	log.Info("Received Product.Call request")
-	rsp.Msg = "Hello " + req.Name
+
+func (p *Product) AddProduct(_ context.Context, request *protoProduct.ProductInfo, response *protoProduct.ResponseProduct) error {
+	product := &model.Product{}
+	if err := common.SwapTo(request, product); err != nil {
+		return err
+	}
+	productID, err := p.ProductDataService.AddProduct(product)
+	if err != nil {
+		return err
+	}
+	response.ProductId = productID
 	return nil
 }
 
-// Stream is a server side stream handler called via client.Stream or the generated client code
-func (e *Product) Stream(ctx context.Context, req *product.StreamingRequest, stream product.Product_StreamStream) error {
-	log.Infof("Received Product.Stream request with count: %d", req.Count)
-
-	for i := 0; i < int(req.Count); i++ {
-		log.Infof("Responding: %d", i)
-		if err := stream.Send(&product.StreamingResponse{
-			Count: int64(i),
-		}); err != nil {
-			return err
-		}
+func (p *Product) FindProductByID(_ context.Context, request *protoProduct.RequestID,  response *protoProduct.ProductInfo) error {
+	productData, err := p.ProductDataService.FindProductByID(request.ProductId)
+	if err != nil {
+		return err
 	}
-
+	if err := common.SwapTo(productData, response); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *Product) UpdateProduct(_ context.Context, request *protoProduct.ProductInfo, response *protoProduct.ResponseMessage) error {
+	product := &model.Product{}
+	if err := common.SwapTo(request, product); err != nil {
+		return err
+	}
+	err := p.ProductDataService.UpdateProduct(product)
+	if err != nil {
+		return err
+	}
+	response.Message = "更新成功"
 	return nil
 }
 
-// PingPong is a bidirectional stream handler called via client.Stream or the generated client code
-func (e *Product) PingPong(ctx context.Context, stream product.Product_PingPongStream) error {
-	for {
-		req, err := stream.Recv()
-		if err != nil {
-			return err
-		}
-		log.Infof("Got ping %v", req.Stroke)
-		if err := stream.Send(&product.Pong{Stroke: req.Stroke}); err != nil {
-			return err
-		}
+func (p *Product) DeleteProductByID(_ context.Context, request *protoProduct.RequestID, response *protoProduct.ResponseMessage) error {
+	if err := p.ProductDataService.DeleteProduct(request.ProductId); err != nil {
+		return err
 	}
+	response.Message = "删除成功"
+	return nil
 }
+func (p *Product) FindAllProduct(_ context.Context, _ *protoProduct.RequestAll, response *protoProduct.AllProduct) error {
+	productSlice, err := p.ProductDataService.FindAllProduct()
+	if err != nil {
+		return err
+	}
+
+	if err := common.ProductToResponseSlice(productSlice, response); err != nil {
+		return err
+	}
+	return nil
+}
+

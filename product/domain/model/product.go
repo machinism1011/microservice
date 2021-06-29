@@ -1,6 +1,6 @@
 package model
 
-type Category struct {
+type Product struct {
 	ID					int64	`gorm:"primaryKey;not_null;autoIncrement"`
 	ProductName			string	`json:"product_name"`
 	ProductSku			string	`gorm:"unique_index;not_null" json:"product_sku"`
@@ -8,5 +8,5 @@ type Category struct {
 	ProductDescription	string	`json:"product_description"`
 	ProductImage		[]ProductImage	`gorm:"ForeignKey:ImageProductID" json:"product_image"`
 	ProductSize			[]ProductSize	`gorm:"ForeignKey:SizeProductID" json:"product_size"`
-	ProductSeo			ProductSeo		`gorm:"ForeignKey"SeoProductID" json:"product_seo`
+	ProductSeo			ProductSeo		`gorm:"ForeignKey:SeoProductID" json:"product_seo"`
 }
