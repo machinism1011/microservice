@@ -46,6 +46,7 @@ func main() {
 		mysqlInfo.DataBase,
 		"10s",
 	)
+	fmt.Println(dsn)
 	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		logger.Error(err)

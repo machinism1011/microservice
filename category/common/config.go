@@ -10,13 +10,13 @@ import (
 func GetConsulConfig(host string, port int64, prefix string) (config.Config, error) {
 	consulSource := consul.NewSource(
 		consul.WithAddress(host+":"+strconv.FormatInt(port, 10)),
-		consul.WithPrefix(prefix),        // 不设置默认前缀为 /micro/config
+		consul.WithPrefix(prefix), // 不设置默认前缀为 /micro/config
 		consul.StripPrefix(true),  // 表示可以不带前缀直接获取对应配置
-		)
-	config, err := config.NewConfig()
+	)
+	conf, err := config.NewConfig()
 	if err != nil {
-		return config, err
+		return conf, err
 	}
 	err = config.Load(consulSource)
-	return config, err
+	return conf, err
 }
