@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/machinism1011/microservice/product/domain/model"
-	"github.com/machinism1011/microservice/product/domain/repository"
+	"github.com/machinism1011/microservice/cart/domain/model"
+	"github.com/machinism1011/microservice/cart/domain/repository"
 )
 
 type IProductDataService interface {
