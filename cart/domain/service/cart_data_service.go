@@ -5,38 +5,54 @@ import (
 	"github.com/machinism1011/microservice/cart/domain/repository"
 )
 
-type IProductDataService interface {
-	AddProduct(*model.Product) (int64, error)
-	DeleteProduct(int64) error
-	UpdateProduct(*model.Product) error
-	FindProductByID(int64) (*model.Product, error)
-	FindAllProduct() ([]model.Product, error)
+type ICartDataService interface {
+	AddCart(*model.Cart) (int64, error)
+	DeleteCart(int64) error
+	UpdateCart(*model.Cart) error
+	FindCartByID(int64) (*model.Cart, error)
+	FindAllCart(int64) ([]model.Cart, error)
+
+	CleanCart(int64) error
+	IncrNum(int64, int64) error
+	DecrNum(int64, int64) error
 }
 
-type ProductDataService struct {
-	ProductRepository repository.IProductRepository
+type CartDataService struct {
+	CartRepository repository.ICartRepository
 }
 
-func NewProductDataService(productRepository repository.IProductRepository) IProductDataService {
-	return &ProductDataService{productRepository}
+func NewCartDataService(cartRepository repository.ICartRepository) ICartDataService {
+	return &CartDataService{cartRepository}
 }
 
-func (p *ProductDataService) AddProduct(product *model.Product) (int64, error) {
-	return p.ProductRepository.CreateProduct(product)
+func (c *CartDataService) AddCart(cart *model.Cart) (int64, error) {
+	return c.CartRepository.CreateCart(cart)
 }
 
-func (p *ProductDataService) DeleteProduct(productID int64) error {
-	return p.ProductRepository.DeleteProductByID(productID)
+func (c *CartDataService) DeleteCart(cartID int64) error {
+	return c.CartRepository.DeleteCartByID(cartID)
 }
 
-func (p *ProductDataService) UpdateProduct(product *model.Product) error {
-	return p.ProductRepository.UpdateProduct(product)
+func (c *CartDataService) UpdateCart(cart *model.Cart) error {
+	return c.CartRepository.UpdateCart(cart)
 }
 
-func (p *ProductDataService) FindProductByID(productID int64) (*model.Product, error) {
-	return p.ProductRepository.FindProductByID(productID)
+func (c *CartDataService) FindCartByID(cartID int64) (*model.Cart, error) {
+	return c.CartRepository.FindCartByID(cartID)
 }
 
-func (p *ProductDataService) FindAllProduct() ([]model.Product, error) {
-	return p.ProductRepository.FindAllProduct()
+func (c *CartDataService) FindAllCart(userID int64) ([]model.Cart, error) {
+	return c.CartRepository.FindAllCart(userID)
+}
+
+func (c *CartDataService) CleanCart(userID int64) error {
+	return c.CartRepository.CleanCart(userID)
+}
+
+func (c *CartDataService) IncrNum(cartID, num int64) error {
+	return c.CartRepository.IncrNum(cartID, num)
+}
+
+func (c *CartDataService) DecrNum(cartID, num int64) error {
+	return c.CartRepository.DecrNum(cartID, num)
 }

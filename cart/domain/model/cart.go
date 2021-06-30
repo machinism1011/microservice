@@ -1,12 +1,9 @@
 package model
 
-type Product struct {
-	ID                 int64          `gorm:"primaryKey;not_null;autoIncrement"`
-	ProductName        string         `json:"product_name"`
-	ProductSku         string         `gorm:"unique_index;not_null" json:"product_sku"`
-	ProductPrice       float64        `json:"product_price"`
-	ProductDescription string         `json:"product_description"`
-	ProductImage       []ProductImage `gorm:"ForeignKey:ImageProductID" json:"product_image"`
-	ProductSize        []ProductSize  `gorm:"ForeignKey:SizeProductID" json:"product_size"`
-	ProductSeo         ProductSeo     `gorm:"ForeignKey:SeoProductID" json:"product_seo"`
+type Cart struct {
+	ID        int64 `gorm:"primaryKey;not_null;autoIncrement" json:"id"`
+	ProductID int64 `gorm:"not_null" json:"product_id"`
+	Num       int64 `gorm:"not_null" json:"num"`
+	SizeID    int64 `gorm:"not_null" json:"size_id"`
+	UserID    int64 `gorm:"not_null" json:"user_id"`
 }

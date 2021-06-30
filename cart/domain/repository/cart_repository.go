@@ -1,80 +1,87 @@
 package repository
 
 import (
+	"errors"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"github.com/machinism1011/microservice/product/domain/model"
+	"github.com/machinism1011/microservice/cart/domain/model"
 )
 
-type IProductRepository interface {
+type ICartRepository interface {
 	InitTable() error
-	FindProductByID(int64) (*model.Product, error)
-	FindAllProduct() ([]model.Product, error)
-	CreateProduct(*model.Product) (int64, error)
-	DeleteProductByID(int64) error
-	UpdateProduct(*model.Product) error
+	FindCartByID(int64) (*model.Cart, error)
+	FindAllCart(int64) ([]model.Cart, error)
+	CreateCart(*model.Cart) (int64, error)
+	DeleteCartByID(int64) error
+	UpdateCart(*model.Cart) error
+
+	CleanCart(int64) error
+	IncrNum(int64, int64) error
+	DecrNum(int64, int64) error
 }
 
-type ProductRepository struct {
+type CartRepository struct {
 	mysqlDb *gorm.DB
 }
 
-func NewProductRepository(db *gorm.DB) IProductRepository {
-	return &ProductRepository{mysqlDb: db}
+func NewCartRepository(db *gorm.DB) ICartRepository {
+	return &CartRepository{mysqlDb: db}
 }
 
-func (p *ProductRepository) InitTable() error {
+func (c *CartRepository) InitTable() error {
 	// create multi tables
-	return p.mysqlDb.CreateTable(&model.Product{}, &model.ProductImage{}, &model.ProductSeo{}, &model.ProductSize{}).Error
+	return c.mysqlDb.CreateTable(&model.Cart{}).Error
 }
 
-func (p *ProductRepository) FindProductByID(productID int64) (product *model.Product, err error) {
-	product = &model.Product{}
-	// 加载关联信息，使用preload
-	return product, p.mysqlDb.Preload("ProductImage").Preload("ProductSize").Preload("ProductSeo").First(product, productID).Error
+func (c *CartRepository) FindCartByID(cartID int64) (cart *model.Cart, err error) {
+	cart = &model.Cart{}
+	return cart, c.mysqlDb.First(cart, cartID).Error
 }
 
-func (p *ProductRepository) FindAllProduct() (productSlice []model.Product, err error) {
-	productSlice = make([]model.Product, 0)
-	return productSlice, p.mysqlDb.Preload("ProductImage").Preload("ProductSize").Preload("ProductSeo").Find(&productSlice).Error
+func (c *CartRepository) FindAllCart(userID int64) (cartSlice []model.Cart, err error) {
+	cartSlice = make([]model.Cart, 0)
+	return cartSlice, c.mysqlDb.Where("user_id = ?", userID).Find(&cartSlice).Error
 }
 
-func (p *ProductRepository) CreateProduct(product *model.Product) (productID int64, err error) {
-	return product.ID, p.mysqlDb.Create(product).Error
+func (c *CartRepository) CreateCart(cart *model.Cart) (cartID int64, err error) {
+	// 根据ProductID和SizeID判断是否存在，如果存在则不创建，否则创建。
+	db := c.mysqlDb.FirstOrCreate(cart, model.Cart{ProductID: cart.ProductID, SizeID: cart.SizeID, UserID: cart.UserID})
+	if db.Error != nil {
+		return 0, db.Error
+	}
+	if db.RowsAffected == 0 {
+		return 0, errors.New("购物车插入失败")
+	}
+	return cart.ID, nil
 }
 
-func (p *ProductRepository) DeleteProductByID(productID int64) error {
-	// 关联表，需要开启事务
-	tx := p.mysqlDb.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if tx.Error != nil {
-		return tx.Error
-	}
-
-	if err := tx.Unscoped().Where("id = ?", productID).Delete(&model.Product{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-	if err := tx.Unscoped().Where("images_product_id = ?", productID).Delete(&model.ProductImage{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-	if err := tx.Unscoped().Where("size_product_id = ?", productID).Delete(&model.ProductSize{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-	if err := tx.Unscoped().Where("seo_product_id = ?", productID).Delete(&model.ProductSeo{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-	return tx.Commit().Error
+func (c *CartRepository) DeleteCartByID(cartID int64) error {
+	return c.mysqlDb.Where("id = ?", cartID).Delete(&model.Cart{}).Error
 }
 
-func (p *ProductRepository) UpdateProduct(product *model.Product) error {
-	return p.mysqlDb.Model(product).Update(product).Error
+func (c *CartRepository) UpdateCart(cart *model.Cart) error {
+	return c.mysqlDb.Model(cart).Update(cart).Error
+}
+
+func (c *CartRepository) CleanCart(userID int64) error {
+	return c.mysqlDb.Where("user_id = ?", userID).Delete(&model.Cart{}).Error
+}
+
+func (c *CartRepository) IncrNum(cartID, num int64) error {
+	cart := &model.Cart{ID: cartID}
+	return c.mysqlDb.Model(cart).UpdateColumn("num", gorm.Expr("num + ?", num)).Error
+}
+
+func (c *CartRepository) DecrNum(cartID, num int64) error {
+	cart := &model.Cart{ID: cartID}
+	db := c.mysqlDb.Model(cart).Where("num >= ?", num).UpdateColumn("num", gorm.Expr("num - ?", num))
+	if db.Error != nil {
+		return db.Error
+	}
+	if db.RowsAffected == 0 {
+		return errors.New("减少失败")
+	}
+	return nil
+
 }
