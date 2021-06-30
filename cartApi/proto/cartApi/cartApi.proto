@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package go.micro.api.cartApi;
+
+import "proto/imports/api.proto";
+
+service CartApi {
+	rpc Call(go.api.Request) returns (go.api.Response) {}
+}
