@@ -1,0 +1,20 @@
+#声名版本
+version: "3"
+services:
+  #服务名称，并且这个服务名称能够在同一个网络进行访问
+  consul:
+    image: cap1573/consul
+    ports:
+      - "8510:8500"
+      - "8511:8501"
+  # 链路追踪
+  jaeger:
+    image: cap1573/jaeger
+    ports:
+      - "6841:6831/udp"
+      - "16696:16686"
+  # 熔断器
+  hystrix-dashboard:
+    image: cap1573/hystrix-dashboard
+    ports:
+      - "9012:9002"
