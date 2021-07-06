@@ -5,13 +5,12 @@ MODIFY=Mproto/imports/api.proto=github.com/micro/go-micro/v2/api/proto
 .PHONY: proto
 proto:
     
-	protoc --proto_path=. --micro_out=${MODIFY}:. --go_out=${MODIFY}:. proto/cartApi/cartApi.proto
-    
+	docker run --rm -v "$(shell pwd):$(shell pwd)" -w "$(shell pwd)" ericnothing0113/go-protoc:1.0.0 --proto_path=. --micro_out=. --go_out=. -I. proto/cartApi/*.proto
 
 .PHONY: build
 build: proto
 
-	go build -o cartApi-api *.go
+	go build -o cartApi *.go
 
 .PHONY: test
 test:
@@ -19,4 +18,4 @@ test:
 
 .PHONY: docker
 docker:
-	docker build . -t cartApi-api:latest
+	docker build . -t cartApi:latest
