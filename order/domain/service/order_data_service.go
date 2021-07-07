@@ -1,58 +1,52 @@
 package service
 
 import (
-	"github.com/machinism1011/microservice/cart/domain/model"
-	"github.com/machinism1011/microservice/cart/domain/repository"
+	"github.com/machinism1011/microservice/order/domain/model"
+	"github.com/machinism1011/microservice/order/domain/repository"
 )
 
-type ICartDataService interface {
-	AddCart(*model.Cart) (int64, error)
-	DeleteCart(int64) error
-	UpdateCart(*model.Cart) error
-	FindCartByID(int64) (*model.Cart, error)
-	FindAllCart(int64) ([]model.Cart, error)
-
-	CleanCart(int64) error
-	IncrNum(int64, int64) error
-	DecrNum(int64, int64) error
+type IOrderDataService interface {
+	AddOrder(*model.Order) (int64, error)
+	DeleteOrder(int64) error
+	UpdateOrder(*model.Order) error
+	FindOrderByID(int64) (*model.Order, error)
+	FindAllOrder() ([]model.Order, error)
+	UpdateShipStatus(int64, int32) error
+	UpdatePayStatus(int64, int32) error
 }
 
-type CartDataService struct {
-	CartRepository repository.ICartRepository
+type OrderDataService struct {
+	OrderRepository repository.IOrderRepository
 }
 
-func NewCartDataService(cartRepository repository.ICartRepository) ICartDataService {
-	return &CartDataService{cartRepository}
+func NewOrderDataService(orderRepository repository.IOrderRepository) IOrderDataService {
+	return &OrderDataService{orderRepository}
 }
 
-func (c *CartDataService) AddCart(cart *model.Cart) (int64, error) {
-	return c.CartRepository.CreateCart(cart)
+func (o *OrderDataService) AddOrder(order *model.Order) (int64, error) {
+	return o.OrderRepository.CreateOrder(order)
 }
 
-func (c *CartDataService) DeleteCart(cartID int64) error {
-	return c.CartRepository.DeleteCartByID(cartID)
+func (o *OrderDataService) DeleteOrder(orderID int64) error {
+	return o.OrderRepository.DeleteOrderByID(orderID)
 }
 
-func (c *CartDataService) UpdateCart(cart *model.Cart) error {
-	return c.CartRepository.UpdateCart(cart)
+func (o *OrderDataService) UpdateOrder(order *model.Order) error {
+	return o.OrderRepository.UpdateOrder(order)
 }
 
-func (c *CartDataService) FindCartByID(cartID int64) (*model.Cart, error) {
-	return c.CartRepository.FindCartByID(cartID)
+func (o *OrderDataService) FindOrderByID(orderID int64) (*model.Order, error) {
+	return o.OrderRepository.FindOrderByID(orderID)
 }
 
-func (c *CartDataService) FindAllCart(userID int64) ([]model.Cart, error) {
-	return c.CartRepository.FindAllCart(userID)
+func (o *OrderDataService) FindAllOrder() ([]model.Order, error) {
+	return o.OrderRepository.FindAllOrder()
 }
 
-func (c *CartDataService) CleanCart(userID int64) error {
-	return c.CartRepository.CleanCart(userID)
+func (o *OrderDataService) UpdateShipStatus(orderID int64, shipStatus int32) error {
+	return o.OrderRepository.UpdateShipStatus(orderID, shipStatus)
 }
 
-func (c *CartDataService) IncrNum(cartID, num int64) error {
-	return c.CartRepository.IncrNum(cartID, num)
-}
-
-func (c *CartDataService) DecrNum(cartID, num int64) error {
-	return c.CartRepository.DecrNum(cartID, num)
+func (o *OrderDataService) UpdatePayStatus(orderID int64, payStatus int32) error {
+	return o.OrderRepository.UpdatePayStatus(orderID, payStatus)
 }

@@ -5,83 +5,92 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"github.com/machinism1011/microservice/cart/domain/model"
+	"github.com/machinism1011/microservice/order/domain/model"
 )
 
-type ICartRepository interface {
+type IOrderRepository interface {
 	InitTable() error
-	FindCartByID(int64) (*model.Cart, error)
-	FindAllCart(int64) ([]model.Cart, error)
-	CreateCart(*model.Cart) (int64, error)
-	DeleteCartByID(int64) error
-	UpdateCart(*model.Cart) error
-
-	CleanCart(int64) error
-	IncrNum(int64, int64) error
-	DecrNum(int64, int64) error
+	FindOrderByID(int64) (*model.Order, error)
+	FindAllOrder() ([]model.Order, error)
+	CreateOrder(*model.Order) (int64, error)
+	DeleteOrderByID(int64) error
+	UpdateOrder(*model.Order) error
+	UpdateShipStatus(int64, int32) error
+	UpdatePayStatus(int64, int32) error
 }
 
-type CartRepository struct {
+type OrderRepository struct {
 	mysqlDb *gorm.DB
 }
 
-func NewCartRepository(db *gorm.DB) ICartRepository {
-	return &CartRepository{mysqlDb: db}
+func NewOrderRepository(db *gorm.DB) IOrderRepository {
+	return &OrderRepository{mysqlDb: db}
 }
 
-func (c *CartRepository) InitTable() error {
+func (o *OrderRepository) InitTable() error {
 	// create multi tables
-	return c.mysqlDb.CreateTable(&model.Cart{}).Error
+	return o.mysqlDb.CreateTable(&model.Order{}, &model.OrderDetail{}).Error
 }
 
-func (c *CartRepository) FindCartByID(cartID int64) (cart *model.Cart, err error) {
-	cart = &model.Cart{}
-	return cart, c.mysqlDb.First(cart, cartID).Error
+func (o *OrderRepository) FindOrderByID(orderID int64) (order *model.Order, err error) {
+	order = &model.Order{}
+	return order, o.mysqlDb.Preload("OrderDetail").First(order, orderID).Error
 }
 
-func (c *CartRepository) FindAllCart(userID int64) (cartSlice []model.Cart, err error) {
-	cartSlice = make([]model.Cart, 0)
-	return cartSlice, c.mysqlDb.Where("user_id = ?", userID).Find(&cartSlice).Error
+func (o *OrderRepository) FindAllOrder() (orderSlice []model.Order, err error) {
+	orderSlice = make([]model.Order, 0)
+	return orderSlice, o.mysqlDb.Preload("OrderDetail").Find(&orderSlice).Error
 }
 
-func (c *CartRepository) CreateCart(cart *model.Cart) (cartID int64, err error) {
-	// 根据ProductID和SizeID判断是否存在，如果存在则不创建，否则创建。
-	db := c.mysqlDb.FirstOrCreate(cart, model.Cart{ProductID: cart.ProductID, SizeID: cart.SizeID, UserID: cart.UserID})
-	if db.Error != nil {
-		return 0, db.Error
+func (o *OrderRepository) CreateOrder(order *model.Order) (orderID int64, err error) {
+	return order.ID, o.mysqlDb.Create(order).Error
+}
+
+func (o *OrderRepository) DeleteOrderByID(orderID int64) error {
+	// 两个表 开启事物
+	tx := o.mysqlDb.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if tx.Error != nil {
+		return tx.Error
 	}
-	if db.RowsAffected == 0 {
-		return 0, errors.New("购物车插入失败")
+	if err := tx.Unscoped().Where("id = ?", orderID).Delete(&model.Order{}).Error; err != nil {
+		tx.Rollback()
+		return err
 	}
-	return cart.ID, nil
+	if err := tx.Unscoped().Where("order_id = ?", orderID).Delete(&model.Order{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }
 
-func (c *CartRepository) DeleteCartByID(cartID int64) error {
-	return c.mysqlDb.Where("id = ?", cartID).Delete(&model.Cart{}).Error
+func (o *OrderRepository) UpdateOrder(order *model.Order) error {
+	return o.mysqlDb.Model(order).Update(order).Error
 }
 
-func (c *CartRepository) UpdateCart(cart *model.Cart) error {
-	return c.mysqlDb.Model(cart).Update(cart).Error
-}
-
-func (c *CartRepository) CleanCart(userID int64) error {
-	return c.mysqlDb.Where("user_id = ?", userID).Delete(&model.Cart{}).Error
-}
-
-func (c *CartRepository) IncrNum(cartID, num int64) error {
-	cart := &model.Cart{ID: cartID}
-	return c.mysqlDb.Model(cart).UpdateColumn("num", gorm.Expr("num + ?", num)).Error
-}
-
-func (c *CartRepository) DecrNum(cartID, num int64) error {
-	cart := &model.Cart{ID: cartID}
-	db := c.mysqlDb.Model(cart).Where("num >= ?", num).UpdateColumn("num", gorm.Expr("num - ?", num))
+func (o *OrderRepository) UpdateShipStatus(orderID int64, shipStatus int32) error {
+	db := o.mysqlDb.Model(&model.Order{}).Where("id = ?", orderID).UpdateColumn("ship_status", shipStatus)
 	if db.Error != nil {
 		return db.Error
 	}
 	if db.RowsAffected == 0 {
-		return errors.New("减少失败")
+		return errors.New("更新失败")
 	}
 	return nil
+}
 
+func (o *OrderRepository) UpdatePayStatus(orderID int64, payStatus int32) error {
+	db := o.mysqlDb.Model(&model.Order{}).Where("id = ?", orderID).UpdateColumn("pay_status", payStatus)
+	if db.Error != nil {
+		return db.Error
+	}
+	if db.RowsAffected == 0 {
+		return errors.New("更新失败")
+	}
+	return nil
 }
