@@ -65,9 +65,9 @@ func main() {
 	db.SingularTable(true)
 
 	// 初始化表，只一次
-	if err := repository.NewOrderRepository(db).InitTable(); err != nil {
-		logger.Fatal(err)
-	}
+	//if err := repository.NewOrderRepository(db).InitTable(); err != nil {
+	//	logger.Fatal(err)
+	//}
 
 	// 创建实例
 	orderDataService := service2.NewOrderDataService(repository.NewOrderRepository(db))

@@ -1,4 +1,4 @@
-#声名版本
+#声明版本
 version: "3"
 services:
   #服务名称，并且这个服务名称能够在同一个网络进行访问
@@ -7,12 +7,12 @@ services:
 #    ports:
 #      - "8500:8500"
 #      - "8501:8501"
-#  # 链路追踪
-#  jaeger:
-#    image: cap1573/jaeger
-#    ports:
-#      - "6831:6831/udp"
-#      - "16686:16686"
+  # 链路追踪
+  jaeger:
+    image: cap1573/jaeger
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
   # 熔断器
   hystrix-dashboard:
     image: cap1573/hystrix-dashboard
@@ -24,7 +24,7 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9092:9092"
+      - "9090:9090"
   # 监控看板
   grafana:
     image: cap1573/grafana

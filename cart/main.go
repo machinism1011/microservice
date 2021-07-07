@@ -34,7 +34,7 @@ var QPS = 100
 
 func main() {
 	consulHost := "127.0.0.1"
-	consulPort := 8500
+	consulPort := 8501
 	servicePort := 8087
 	// 配置中心
 	consulConfig, err := common.GetConsulConfig(consulHost, int64(consulPort), "/micro/config")
