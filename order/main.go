@@ -73,7 +73,7 @@ func main() {
 	orderDataService := service2.NewOrderDataService(repository.NewOrderRepository(db))
 
 	// 暴露监控地址
-	common.PrometheusBoot(prometheusPort)
+	go common.PrometheusBoot(prometheusPort)
 
 	// New Service
 	service := micro.NewService(

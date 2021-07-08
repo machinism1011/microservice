@@ -332,6 +332,8 @@ github.com/liquidweb/liquidweb-go v1.6.0/go.mod h1:UDcVnAMDkZxpw4Y7NOHkqoeiGacVL
 github.com/lucas-clemente/quic-go v0.14.1/go.mod h1:Vn3/Fb0/77b02SGhQk36KzOUmXgVpFfizUfW5WMaqyU=
 github.com/machinism1011/microservice/common v0.0.0-20210707021027-53a992b76ad8 h1:faazfNX6UOS+YWMCE5lPW4+nBbwdQWusAgHFjdREmVI=
 github.com/machinism1011/microservice/common v0.0.0-20210707021027-53a992b76ad8/go.mod h1:s9t4J/fQDeK9p6EbF/KSZuM/1J++KzvfVpBQLvqSvI4=
+github.com/machinism1011/microservice/common v0.0.0-20210707085944-dbd8b72ce0f8 h1:i1xm2VmTUe+s1NUR5Z1buIrNKrNlZ6Dehrp0BBae2mk=
+github.com/machinism1011/microservice/common v0.0.0-20210707085944-dbd8b72ce0f8/go.mod h1:s9t4J/fQDeK9p6EbF/KSZuM/1J++KzvfVpBQLvqSvI4=
 github.com/marten-seemann/chacha20 v0.2.0/go.mod h1:HSdjFau7GzYRj+ahFNwsO3ouVJr1HFkWoEwNDb4TMtE=
 github.com/marten-seemann/qpack v0.1.0/go.mod h1:LFt1NU/Ptjip0C2CPkhimBz5CGE3WGDAUWqna+CNTrI=
 github.com/marten-seemann/qtls v0.4.1/go.mod h1:pxVXcHHw1pNIt8Qo0pwSYQEoZ8yYOOPXTCZLQQunvRc=
